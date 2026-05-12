@@ -1,60 +1,88 @@
-import './style.css'
-import typescriptLogo from './assets/typescript.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import { setupCounter } from './counter.ts'
+import "./style.css";
 
-document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
-<section id="center">
-  <div class="hero">
-    <img src="${heroImg}" class="base" width="170" height="179">
-    <img src="${typescriptLogo}" class="framework" alt="TypeScript logo"/>
-    <img src="${viteLogo}" class="vite" alt="Vite logo" />
-  </div>
-  <div>
-    <h1>Get started</h1>
-    <p>Edit <code>src/main.ts</code> and save to test <code>HMR</code></p>
-  </div>
-  <button id="counter" type="button" class="counter"></button>
-</section>
+declare const L: any;
 
-<div class="ticks"></div>
+const map = L.map("map").setView([17.385, 78.4867], 13);
 
-<section id="next-steps">
-  <div id="docs">
-    <svg class="icon" role="presentation" aria-hidden="true"><use href="/icons.svg#documentation-icon"></use></svg>
-    <h2>Documentation</h2>
-    <p>Your questions, answered</p>
-    <ul>
-      <li>
-        <a href="https://vite.dev/" target="_blank">
-          <img class="logo" src="${viteLogo}" alt="" />
-          Explore Vite
-        </a>
-      </li>
-      <li>
-        <a href="https://www.typescriptlang.org" target="_blank">
-          <img class="button-icon" src="${typescriptLogo}" alt="">
-          Learn more
-        </a>
-      </li>
-    </ul>
-  </div>
-  <div id="social">
-    <svg class="icon" role="presentation" aria-hidden="true"><use href="/icons.svg#social-icon"></use></svg>
-    <h2>Connect with us</h2>
-    <p>Join the Vite community</p>
-    <ul>
-      <li><a href="https://github.com/vitejs/vite" target="_blank"><svg class="button-icon" role="presentation" aria-hidden="true"><use href="/icons.svg#github-icon"></use></svg>GitHub</a></li>
-      <li><a href="https://chat.vite.dev/" target="_blank"><svg class="button-icon" role="presentation" aria-hidden="true"><use href="/icons.svg#discord-icon"></use></svg>Discord</a></li>
-      <li><a href="https://x.com/vite_js" target="_blank"><svg class="button-icon" role="presentation" aria-hidden="true"><use href="/icons.svg#x-icon"></use></svg>X.com</a></li>
-      <li><a href="https://bsky.app/profile/vite.dev" target="_blank"><svg class="button-icon" role="presentation" aria-hidden="true"><use href="/icons.svg#bluesky-icon"></use></svg>Bluesky</a></li>
-    </ul>
-  </div>
-</section>
+L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+  attribution: "&copy; OpenStreetMap contributors",
+}).addTo(map);
 
-<div class="ticks"></div>
-<section id="spacer"></section>
-`
+L.marker([17.385, 78.4867])
+  .addTo(map)
+  .bindPopup("S&G Constructions")
+  .openPopup();
 
-setupCounter(document.querySelector<HTMLButtonElement>('#counter')!)
+
+
+
+const nav = document.querySelector('nav')
+
+window.addEventListener('scroll', () => {
+  if (window.scrollY > 50) {
+    nav?.classList.add(
+      'bg-[rgba(8,7,6,0.97)]',
+      'border-b',
+      'border-[rgba(201,169,110,0.15)]'
+    )
+
+    nav?.classList.remove(
+      'bg-gradient-to-b',
+      'from-[rgba(8,7,6,0.95)]',
+      'to-transparent'
+    )
+  } else {
+    nav?.classList.remove(
+      'bg-[rgba(8,7,6,0.97)]',
+      'border-b',
+      'border-[rgba(201,169,110,0.15)]'
+    )
+
+    nav?.classList.add(
+      'bg-gradient-to-b',
+      'from-[rgba(8,7,6,0.95)]',
+      'to-transparent'
+    )
+  }
+})
+
+
+const track = document.getElementById("testiTrack") as HTMLElement
+const prevBtn = document.getElementById("testiPrev") as HTMLButtonElement
+const nextBtn = document.getElementById("testiNext") as HTMLButtonElement
+const dots = document.querySelectorAll(".testi-dot")
+
+let currentSlide = 0
+const totalSlides = dots.length
+
+const updateSlider = () => {
+  track.style.transform = `translateX(-${currentSlide * 100}%)`
+
+  dots.forEach((dot, i) => {
+    dot.classList.toggle("active", i === currentSlide)
+  })
+}
+
+nextBtn.addEventListener("click", () => {
+  currentSlide = (currentSlide + 1) % totalSlides
+  updateSlider()
+})
+
+prevBtn.addEventListener("click", () => {
+  currentSlide = (currentSlide - 1 + totalSlides) % totalSlides
+  updateSlider()
+})
+
+dots.forEach((dot, i) => {
+  dot.addEventListener("click", () => {
+    currentSlide = i
+    updateSlider()
+  })
+})
+
+setInterval(() => {
+  currentSlide = (currentSlide + 1) % totalSlides
+  updateSlider()
+}, 5000)
+
+updateSlider()
